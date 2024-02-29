@@ -19,7 +19,7 @@
 		},
 		"windows": [
 			{
-				"title": "tauri-app",
+				"title": "MC Server GUI",
 				"width": 1000,
 				"height": 600
 			}
