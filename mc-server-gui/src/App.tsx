@@ -118,7 +118,7 @@ function App() {
           <h2 className="text-lg font-bold">Logged On Users</h2>
           {loggedOnUsers.length === 0 && <p>No users logged on</p>}
           {loggedOnUsers.map((user, i) => (
-            <p key={i}>{user}</p>
+            <p className="flex gap-2 items-center border p-2 max-w-fit rounded-md" key={i}><img className="h-10" src={`https://mc-heads.net/avatar/${user}`} alt="" />{user}</p>
           ))}
         </div>
       </div>
