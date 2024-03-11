@@ -6,6 +6,7 @@ import { createServer } from "http";
 import {
   connectToEc2Ssh,
   disconnectFromEc2Ssh,
+  getLogs,
   startMcServer,
   stopMcServer,
 } from "../controllers/ec2-controller.js";
@@ -23,14 +24,16 @@ io.on("connection", (socket) => {
 
   connectToEc2Ssh(socket);
 
+  socket.on("server_status", () => {
+    getLogs(socket);
+  });
+
   socket.on("start_server", () => {
     startMcServer(socket);
-    isServerRunning = true;
   });
 
   socket.on("stop_server", () => {
     stopMcServer(socket);
-    isServerRunning = false;
   });
 
   socket.on("disconnect", () => {

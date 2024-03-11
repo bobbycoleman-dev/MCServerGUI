@@ -25,6 +25,9 @@ function App() {
     socket.on("connection_output", (data: ConnectionOutput) => {
       setIsConnected(data.isConnected);
       if (data.isConnected) {
+        if (isServerRunning) {
+          socket.emit("server_status");
+        }
         toast({
           variant: "success",
           title: "EC2 Connection Status",
@@ -76,7 +79,9 @@ function App() {
         });
       }
     });
+
   }, [socket]);
+
 
   if (!socket) return null;
 
