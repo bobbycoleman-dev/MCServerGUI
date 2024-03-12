@@ -7,6 +7,8 @@ import {
   connectToEc2Ssh,
   disconnectFromEc2Ssh,
   getLogs,
+  getServerProperties,
+  giveDiamond,
   startMcServer,
   stopMcServer,
 } from "../controllers/ec2-controller.js";
@@ -34,6 +36,14 @@ io.on("connection", (socket) => {
 
   socket.on("stop_server", () => {
     stopMcServer(socket);
+  });
+
+  socket.on("get_server_properties", () => {
+    getServerProperties(socket);
+  });
+
+  socket.on("give_diamond", () => {
+    giveDiamond(socket);
   });
 
   socket.on("disconnect", () => {

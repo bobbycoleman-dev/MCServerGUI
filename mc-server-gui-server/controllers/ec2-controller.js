@@ -181,6 +181,57 @@ const stopMcServer = (socket) => {
   });
 };
 
+const getServerProperties = (socket) => {
+  if (!isConnected) {
+    console.log("Not connected to EC2");
+    socket.emit("server_properties_output", "Not connected to EC2");
+    return;
+  }
+
+  client.exec("cat /opt/minecraft/server/server.properties", (err, stream) => {
+    if (err) throw err;
+    stream
+      .on("close", (code, signal) => {
+        console.log("Stream :: close :: code: " + code + ", signal: " + signal);
+      })
+      .on("data", (data) => {
+        console.log("STDOUT: " + data);
+        socket.emit("server_properties_output", data);
+      })
+      .stderr.on("data", (data) => {
+        console.log("STDERR: " + data);
+      });
+  });
+};
+
+const giveDiamond = (socket) => {
+  if (!isConnected) {
+    console.log("Not connected to EC2");
+    socket.emit("give_diamond_output", "Not connected to EC2");
+    return;
+  }
+
+  client.exec(
+    "cd /opt/minecraft/server && screen -S mcserver -X stuff '/give TheBeard2017 diamond\n'",
+    (err, stream) => {
+      if (err) throw err;
+      stream
+        .on("close", (code, signal) => {
+          console.log(
+            "Stream :: close :: code: " + code + ", signal: " + signal,
+          );
+        })
+        .on("data", (data) => {
+          console.log("STDOUT: " + data);
+          socket.emit("give_diamond_output", data);
+        })
+        .stderr.on("data", (data) => {
+          console.log("STDERR: " + data);
+        });
+    },
+  );
+};
+
 export {
   connectToEc2Ssh,
   disconnectFromEc2Ssh,
@@ -188,4 +239,6 @@ export {
   startMcServer,
   stopMcServer,
   getLogs,
+  getServerProperties,
+  giveDiamond,
 };

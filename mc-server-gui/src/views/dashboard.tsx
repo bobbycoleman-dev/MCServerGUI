@@ -4,6 +4,7 @@ import { useSocket } from "../providers/SocketContext";
 import { userLoggedOff, userLoggedOn } from "../lib/utils";
 import LogOutput from "../components/logOutput";
 import { usePlayerStore } from "@/lib/store";
+import GiveDiamond from "@/components/giveDiamond";
 
 export default function Dashboard() {
   const players = usePlayerStore((state: any) => Array.from(state.players));
@@ -60,6 +61,7 @@ export default function Dashboard() {
           <p className="flex gap-2 items-center border p-2 max-w-fit rounded-md" key={i}><img className="h-10" src={`https://mc-heads.net/avatar/${user}`} alt="" />{user}</p>
         ))}
       </div>
+      <GiveDiamond />
     </div>
   )
 }
