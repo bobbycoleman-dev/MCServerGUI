@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useToast } from "../components/ui/use-toast";
 import { useSocket } from "../providers/SocketContext";
 import { userLoggedOff, userLoggedOn } from "../lib/utils";
 import LogOutput from "../components/logOutput";
-export default function Dashboard() {
+import { usePlayerStore } from "@/lib/store";
 
-  const [loggedOnUsers, setLoggedOnUsers] = useState<string[]>([]);
+export default function Dashboard() {
+  const players = usePlayerStore((state: any) => Array.from(state.players));
+  const addPlayer = usePlayerStore((state: any) => state.addPlayer);
+  const removePlayer = usePlayerStore((state: any) => state.removePlayer);
   const { toast } = useToast();
   const socket = useSocket();
 
@@ -14,7 +17,6 @@ export default function Dashboard() {
     if (!socket) return;
 
     socket.on("log_output", (data: string) => {
-
       const lines = data.split("\n");
 
       lines.forEach(line => {
@@ -24,7 +26,7 @@ export default function Dashboard() {
         const loggedOffUser = userLoggedOff(line);
 
         if (loggedOffUser) {
-          setLoggedOnUsers((prev) => prev.filter((user) => user !== loggedOffUser));
+          removePlayer(loggedOffUser);
 
           toast({
             variant: "destructive",
@@ -32,13 +34,7 @@ export default function Dashboard() {
             description: `${loggedOffUser} has logged off`
           });
         } else if (loggedOnUser) {
-          setLoggedOnUsers((prev) => {
-            if (prev.includes(loggedOnUser)) {
-              return prev;
-            }
-            return [...prev, loggedOnUser];
-          });
-
+          addPlayer(loggedOnUser);
           toast({
             variant: "success",
             title: "User Logged On",
@@ -59,8 +55,8 @@ export default function Dashboard() {
       <LogOutput key="logoutput" />
       <div className="mt-4 flex flex-col gap-2">
         <h2 className="text-lg font-bold">Logged On Users</h2>
-        {loggedOnUsers.length === 0 && <p>No users logged on</p>}
-        {loggedOnUsers.map((user, i) => (
+        {players.length === 0 && <p>No users logged on</p>}
+        {players.map((user: any, i: number) => (
           <p className="flex gap-2 items-center border p-2 max-w-fit rounded-md" key={i}><img className="h-10" src={`https://mc-heads.net/avatar/${user}`} alt="" />{user}</p>
         ))}
       </div>
