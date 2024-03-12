@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSocket } from '../providers/SocketContext';
-
-type DataItem = string
+import { useStore } from '@/lib/store';
 
 export default function LogOutput() {
-  const [output, setOutput] = useState<Set<DataItem>>(new Set());
+  const logEntries = useStore((state: any) => Array.from(state.logEntries))
+  const addLogEntry = useStore((state: any) => state.addLogEntry)
   const ref = useRef<HTMLDivElement>(null);
   const socket = useSocket();
 
@@ -12,7 +12,7 @@ export default function LogOutput() {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
-  }, [output]);
+  }, [logEntries]);
 
   useEffect(() => {
     if (!socket) return;
@@ -21,21 +21,18 @@ export default function LogOutput() {
       const lines = data.split("\n");
 
       lines.forEach(line => {
-        setOutput(prev => {
-          const newSet = new Set(prev);
-          newSet.add(line);
-          return newSet;
-        })
+        if (!line.trim()) return
+        addLogEntry(line)
       })
 
     });
   }, [socket])
 
   return (
-    <div ref={ref} className="w-full h-[450px] overflow-y-scroll border">
-      {Array.from(output).map((log, i) => (
+    <div ref={ref} className="min-w-full p-2 h-[450px] overflow-y-scroll border">
+      {logEntries.map((log: any, i) => (
         <p key={i} className="text-sm mb-1">
-          {log}
+          <span className="text-green-500">{`-> `}</span> {log}
         </p>
       ))}
     </div>
