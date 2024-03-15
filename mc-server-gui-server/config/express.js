@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import ec2Router from "../routes/ec2-routes.js";
+import minecraftRouter from "../routes/mojan-routes.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import {
@@ -11,6 +12,7 @@ import {
   giveDiamond,
   startMcServer,
   stopMcServer,
+  getWhitelist,
 } from "../controllers/ec2-controller.js";
 
 const app = express();
@@ -20,6 +22,7 @@ const io = new Server(server, { cors: true });
 app.use(express.json(), cors());
 
 app.use("/api/v1/ec2", ec2Router);
+app.use("/api/v1/minecraft", minecraftRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
@@ -40,6 +43,10 @@ io.on("connection", (socket) => {
 
   socket.on("get_server_properties", () => {
     getServerProperties(socket);
+  });
+
+  socket.on("get_whitelist", () => {
+    getWhitelist(socket);
   });
 
   socket.on("give_diamond", () => {

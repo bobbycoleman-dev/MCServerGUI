@@ -195,8 +195,31 @@ const getServerProperties = (socket) => {
         console.log("Stream :: close :: code: " + code + ", signal: " + signal);
       })
       .on("data", (data) => {
-        console.log("STDOUT: " + data);
+        /*         console.log("STDOUT: " + data); */
         socket.emit("server_properties_output", data);
+      })
+      .stderr.on("data", (data) => {
+        console.log("STDERR: " + data);
+      });
+  });
+};
+
+const getWhitelist = (socket) => {
+  if (!isConnected) {
+    console.log("Not connected to EC2");
+    socket.emit("server_properties_output", "Not connected to EC2");
+    return;
+  }
+
+  client.exec("cat /opt/minecraft/server/whitelist.json", (err, stream) => {
+    if (err) throw err;
+    stream
+      .on("close", (code, signal) => {
+        console.log("Stream :: close :: code: " + code + ", signal: " + signal);
+      })
+      .on("data", (data) => {
+        /*         console.log("STDOUT: " + data); */
+        socket.emit("server_whitelist_output", data);
       })
       .stderr.on("data", (data) => {
         console.log("STDERR: " + data);
@@ -241,4 +264,5 @@ export {
   getLogs,
   getServerProperties,
   giveDiamond,
+  getWhitelist,
 };
