@@ -47,31 +47,42 @@ export function AddWhitelistUser() {
   const [searchError, setSearchError] = useState<string>("")
 
   return (
-    <Card className="">
-      <CardHeader>Add a Player to Whitelist</CardHeader>
-      <CardContent className="flex gap-8 items-center">
-        <form className="space-y-2 w-1/4" onSubmit={
-          (e) => {
-            e.preventDefault()
-            if (!username) {
-              setSearchError("Username is required")
-              return
-            };
-            getUserData(username)
-              .then((data) => {
-                setSearchResults(data); setSearchError("")
-              })
-              .catch((error) => {
-                console.error(error)
-                setSearchError("User not found")
-              })
-          }}>
-          {/*  <Label htmlFor="username">Search Username</Label> */}
-          <Input id="username" type="text" placeholder="Search Username" onChange={(e) => setUsername(e.target.value)} />
-          <Button type="submit" disabled={!username}>Find Player</Button>
-        </form>
-        {searchResults && <WhitelistUserCard uuid={searchResults.uuid} name={searchResults.name} size={"sm"} />}
-        {searchError && <p>{searchError}</p>}
+    <Card className="pt-4 h-[225px]">
+      <CardContent className="flex flex-col gap-2 justify-center h-full">
+        <div className="flex">
+          <p className="text-center w-1/3">Search Player</p>
+          <p className="text-center w-1/3">Verify Player</p>
+          <p className="text-center w-1/3">Add Player</p>
+        </div>
+        <div className="flex items-center gap-4 h-full">
+          <form className="space-y-2 w-1/3 h-full flex flex-col justify-center" onSubmit={
+            (e) => {
+              e.preventDefault()
+              if (!username) {
+                setSearchError("Username is required")
+                return
+              };
+              getUserData(username)
+                .then((data) => {
+                  setSearchResults(data); setSearchError("")
+                })
+                .catch((error) => {
+                  console.error(error)
+                  setSearchError("User not found")
+                })
+            }}>
+            {/*  <Label htmlFor="username">Search Username</Label> */}
+            <Input id="username" type="text" placeholder="Search Username" onChange={(e) => setUsername(e.target.value)} />
+            <Button type="submit" className="w-full" disabled={!username}>Find Player</Button>
+          </form>
+          <div className="w-1/3 flex justify-center">
+            {searchResults && <WhitelistUserCard uuid={searchResults.uuid} name={searchResults.name} size={"sm"} />}
+            {searchError && <p>{searchError}</p>}
+          </div>
+          <div className="w-1/3 flex flex-col">
+            {searchResults && <Button className="w-full self-center text-wrap">Add {searchResults.name} to Whitelist</Button>}
+          </div>
+        </div>
       </CardContent>
     </Card>
   )
