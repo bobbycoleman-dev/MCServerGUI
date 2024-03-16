@@ -20,8 +20,9 @@
 		"windows": [
 			{
 				"title": "MC Server GUI",
-				"width": 1000,
-				"height": 800
+				"width": 1040,
+				"height": 815,
+        "resizable": false 
 			}
 		],
 		"security": {

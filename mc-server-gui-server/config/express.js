@@ -51,7 +51,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("update_whitelist", (data) => {
-    console.log(data);
     const { username, updateType } = data;
     if (!username) {
       socket.emit("command_output", "No username provided");

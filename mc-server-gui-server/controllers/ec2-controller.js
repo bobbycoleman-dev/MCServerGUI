@@ -234,6 +234,7 @@ const updateWhitelist = (username, updateType, socket) => {
           console.log(
             "Stream :: close :: code: " + code + ", signal: " + signal,
           );
+          socket.emit("whitelist_updated", "Whitelist updated");
           getWhitelist(socket);
         })
         .on("data", (data) => {

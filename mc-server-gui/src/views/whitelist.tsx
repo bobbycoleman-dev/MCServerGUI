@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "@/providers/SocketContext";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { getUserData } from "@/api/minecraft-api";
 import WhitelistUserCard from "@/components/ui/whitelistUserCard";
@@ -13,7 +12,6 @@ type WhitelistUser = {
 }
 
 export default function WhiteList() {
-
   const [whitelist, setWhitelist] = useState<WhitelistUser[]>([])
   const socket = useSocket()
 
@@ -21,13 +19,20 @@ export default function WhiteList() {
     if (!socket) return;
 
     socket.emit("get_whitelist")
+  }, [])
+
+  useEffect(() => {
+    if (!socket) return;
 
     socket.on("server_whitelist_output", (data: ArrayBuffer) => {
       const decoder = new TextDecoder('utf-8')
       const dataArray = decoder.decode(data);
       const json = JSON.parse(dataArray);
       setWhitelist(json);
+    })
 
+    socket.on("whitelsit_updated", () => {
+      socket.emit("get_whitelist")
     })
   }, [socket])
 
