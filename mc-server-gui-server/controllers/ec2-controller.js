@@ -16,23 +16,6 @@ const connSettings = {
   privateKey: fs.readFileSync(EC2_PRIVATE_KEY),
 };
 
-const cdToServerDir = () => {
-  client.exec("cd /opt/minecraft/server/ && ls", (err, stream) => {
-    if (err) console.log(err);
-    stream
-      .on("close", (code, signal) => {
-        console.log("Stream :: close :: code: " + code + ", signal: " + signal);
-        console.log("Successfully changed directory to /opt/minecraft/server");
-      })
-      .on("data", (data) => {
-        console.log("STDOUT: " + data);
-      })
-      .stderr.on("data", (data) => {
-        console.log("STDERR: " + data);
-      });
-  });
-};
-
 const connectToEc2Ssh = (socket) => {
   client
     .on("ready", () => {
@@ -227,6 +210,44 @@ const getWhitelist = (socket) => {
   });
 };
 
+const updateWhitelist = (username, updateType, socket) => {
+  if (!isConnected) {
+    console.log("Not connected to EC2");
+    socket.emit("command_output", "Not connected to EC2");
+    return;
+  }
+
+  let command = "";
+
+  if (updateType === "add") {
+    command = `/whitelist add ${username}`;
+  } else if (updateType === "remove") {
+    command = `/whitelist remove ${username}`;
+  }
+
+  client.exec(
+    `cd /opt/minecraft/server && screen -S mcserver -X stuff '${command}\n'`,
+    (err, stream) => {
+      if (err) throw err;
+      stream
+        .on("close", (code, signal) => {
+          console.log(
+            "Stream :: close :: code: " + code + ", signal: " + signal,
+          );
+          getWhitelist(socket);
+        })
+        .on("data", (data) => {
+          console.log("STDOUT: " + data);
+          socket.emit("command_output", data);
+          getWhitelist(socket);
+        })
+        .stderr.on("data", (data) => {
+          console.log("STDERR: " + data);
+        });
+    },
+  );
+};
+
 const giveDiamond = (socket) => {
   if (!isConnected) {
     console.log("Not connected to EC2");
@@ -258,11 +279,11 @@ const giveDiamond = (socket) => {
 export {
   connectToEc2Ssh,
   disconnectFromEc2Ssh,
-  cdToServerDir,
   startMcServer,
   stopMcServer,
   getLogs,
   getServerProperties,
   giveDiamond,
   getWhitelist,
+  updateWhitelist,
 };

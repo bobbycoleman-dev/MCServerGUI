@@ -61,7 +61,6 @@ export default function Dashboard() {
           <p className="flex gap-2 items-center border p-2 max-w-fit rounded-md" key={i}><img className="h-10" src={`https://mc-heads.net/avatar/${user}`} alt="" />{user}</p>
         ))}
       </div>
-      <GiveDiamond />
     </div>
   )
 }

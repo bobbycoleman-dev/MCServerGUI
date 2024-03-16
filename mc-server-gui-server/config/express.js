@@ -13,6 +13,7 @@ import {
   startMcServer,
   stopMcServer,
   getWhitelist,
+  updateWhitelist,
 } from "../controllers/ec2-controller.js";
 
 const app = express();
@@ -47,6 +48,17 @@ io.on("connection", (socket) => {
 
   socket.on("get_whitelist", () => {
     getWhitelist(socket);
+  });
+
+  socket.on("update_whitelist", (data) => {
+    console.log(data);
+    const { username, updateType } = data;
+    if (!username) {
+      socket.emit("command_output", "No username provided");
+      return;
+    }
+
+    updateWhitelist(username, updateType, socket);
   });
 
   socket.on("give_diamond", () => {

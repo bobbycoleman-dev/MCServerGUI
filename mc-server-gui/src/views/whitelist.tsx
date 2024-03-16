@@ -42,9 +42,12 @@ export default function WhiteList() {
 }
 
 export function AddWhitelistUser() {
+  const socket = useSocket()
   const [username, setUsername] = useState<string>("")
   const [searchResults, setSearchResults] = useState<WhitelistUser | null>()
   const [searchError, setSearchError] = useState<string>("")
+
+  if (!socket) return
 
   return (
     <Card className="pt-4 h-[225px]">
@@ -71,16 +74,21 @@ export function AddWhitelistUser() {
                   setSearchError("User not found")
                 })
             }}>
-            {/*  <Label htmlFor="username">Search Username</Label> */}
             <Input id="username" type="text" placeholder="Search Username" onChange={(e) => setUsername(e.target.value)} />
             <Button type="submit" className="w-full" disabled={!username}>Find Player</Button>
           </form>
           <div className="w-1/3 flex justify-center">
-            {searchResults && <WhitelistUserCard uuid={searchResults.uuid} name={searchResults.name} size={"sm"} />}
+            {searchResults && <WhitelistUserCard uuid={searchResults.uuid} name={searchResults.name} size={"sm"} displayOnly={true} />}
             {searchError && <p>{searchError}</p>}
           </div>
           <div className="w-1/3 flex flex-col">
-            {searchResults && <Button className="w-full self-center text-wrap">Add {searchResults.name} to Whitelist</Button>}
+            {searchResults &&
+              <Button
+                className="w-full self-center text-wrap"
+                onClick={() => socket.emit("update_whitelist", { username: searchResults.name, updateType: "add" })}
+              >
+                Add {searchResults.name} to Whitelist
+              </Button>}
           </div>
         </div>
       </CardContent>
