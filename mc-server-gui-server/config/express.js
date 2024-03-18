@@ -9,7 +9,7 @@ import {
   disconnectFromEc2Ssh,
   getLogs,
   getServerProperties,
-  giveDiamond,
+  sendMinecraftCommand,
   startMcServer,
   stopMcServer,
   getWhitelist,
@@ -60,8 +60,8 @@ io.on("connection", (socket) => {
     updateWhitelist(username, updateType, socket);
   });
 
-  socket.on("give_diamond", () => {
-    giveDiamond(socket);
+  socket.on("minecraft_command", (command) => {
+    sendMinecraftCommand(socket, command);
   });
 
   socket.on("disconnect", () => {

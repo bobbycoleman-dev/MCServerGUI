@@ -249,7 +249,7 @@ const updateWhitelist = (username, updateType, socket) => {
   );
 };
 
-const giveDiamond = (socket) => {
+const sendMinecraftCommand = (socket, command) => {
   if (!isConnected) {
     console.log("Not connected to EC2");
     socket.emit("give_diamond_output", "Not connected to EC2");
@@ -257,7 +257,7 @@ const giveDiamond = (socket) => {
   }
 
   client.exec(
-    "cd /opt/minecraft/server && screen -S mcserver -X stuff '/give TheBeard2017 diamond\n'",
+    `cd /opt/minecraft/server && screen -S mcserver -X stuff '${command}\n'`,
     (err, stream) => {
       if (err) throw err;
       stream
@@ -268,7 +268,7 @@ const giveDiamond = (socket) => {
         })
         .on("data", (data) => {
           console.log("STDOUT: " + data);
-          socket.emit("give_diamond_output", data);
+          socket.emit("minecraft_command_output", data);
         })
         .stderr.on("data", (data) => {
           console.log("STDERR: " + data);
@@ -284,7 +284,7 @@ export {
   stopMcServer,
   getLogs,
   getServerProperties,
-  giveDiamond,
+  sendMinecraftCommand,
   getWhitelist,
   updateWhitelist,
 };
