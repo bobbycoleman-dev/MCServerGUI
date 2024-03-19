@@ -43,5 +43,13 @@ I will also be adding an instructional page to help users set up their EC2 insta
 ### Steps
 - Pull the repository
 - Run `npm install` in the `mc-server-gui` and `mc-server-gui-server` directory
+- Add a `.env` file and add your EC2 SSH domain and private key file path
+
+```env
+PORT=8000
+EC2_HOST=your-ec2-ssh-domain
+EC2_PRIVATE_KEY=your-private-key-file-path
+```
+
 - Run `npm run tauri dev` in the `mc-server-gui` directory
 - Run `npm run start` in the `mc-server-gui-server` directory
