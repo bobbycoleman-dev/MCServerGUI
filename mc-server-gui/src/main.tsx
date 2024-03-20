@@ -10,6 +10,7 @@ import ServerProperties from "./views/serverProperties";
 import Whitelist from "./views/whitelist";
 import DataPacks from "./views/dataPacks";
 import EC2Stats from "./views/ec2Stats";
+import SeedMap from "./views/seedMap";
 
 
 
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/whitelist", element: <Whitelist /> },
       { path: "/data-packs", element: <DataPacks /> },
       { path: "/ec2-stats", element: <EC2Stats /> },
+      { path: "/seed-map", element: <SeedMap /> },
     ]
   },
 ]);

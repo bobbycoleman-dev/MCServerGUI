@@ -5,7 +5,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { Button } from './ui/button';
 import { ConnectionOutput, ServerOutput } from '../lib/types';
 import CountdownTimer from './ui/countdown';
-import { BarChart3, LayoutDashboard, ListChecks, PackageOpen, Power, PowerOff, ServerCog } from 'lucide-react';
+import { BarChart3, LayoutDashboard, ListChecks, Map, PackageOpen, Power, PowerOff, ServerCog } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export default function SideNav() {
@@ -95,6 +95,7 @@ export default function SideNav() {
         <NavLink to="/whitelist" className={({ isActive }) => (isActive ? 'flex gap-2 items-center text-green-500' : 'flex gap-2 items-center hover:text-green-400')}><ListChecks />Whitelist</NavLink>
         <NavLink to="/data-packs" className={({ isActive }) => (isActive ? 'flex gap-2 items-center text-green-500' : 'flex gap-2 items-center hover:text-green-400')}><PackageOpen />Data Packs</NavLink>
         <NavLink to="/ec2-stats" className={({ isActive }) => (isActive ? 'flex gap-2 items-center text-green-500' : 'flex gap-2 items-center hover:text-green-400')}><BarChart3 />EC2 Stats</NavLink>
+        <NavLink to="/seed-map" className={({ isActive }) => (isActive ? 'flex gap-2 items-center text-green-500' : 'flex gap-2 items-center hover:text-green-400')}><Map />Seed Map</NavLink>
       </div>
     </div >
   )
