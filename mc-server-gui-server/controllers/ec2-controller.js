@@ -187,6 +187,30 @@ const getServerProperties = (socket) => {
   });
 };
 
+const getDatapacks = (socket) => {
+  if (!isConnected) {
+    console.log("Not connected to EC2");
+    socket.emit("server_properties_output", "Not connected to EC2");
+    return;
+  }
+
+  client.exec("ls /opt/minecraft/server/mp_world/datapacks", (err, stream) => {
+    if (err) throw err;
+    stream
+      .on("close", (code, signal) => {
+        console.log("Stream :: close :: code: " + code + ", signal: " + signal);
+      })
+      .on("data", (data) => {
+        console.log("STDOUT: " + data);
+        console.log(typeof data);
+        socket.emit("datapack_output", data);
+      })
+      .stderr.on("data", (data) => {
+        console.log("STDERR: " + data);
+      });
+  });
+};
+
 const getWhitelist = (socket) => {
   if (!isConnected) {
     console.log("Not connected to EC2");
@@ -287,4 +311,5 @@ export {
   sendMinecraftCommand,
   getWhitelist,
   updateWhitelist,
+  getDatapacks,
 };

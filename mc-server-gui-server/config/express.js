@@ -14,6 +14,7 @@ import {
   stopMcServer,
   getWhitelist,
   updateWhitelist,
+  getDatapacks,
 } from "../controllers/ec2-controller.js";
 
 const app = express();
@@ -44,6 +45,10 @@ io.on("connection", (socket) => {
 
   socket.on("get_server_properties", () => {
     getServerProperties(socket);
+  });
+
+  socket.on("get_datapacks", () => {
+    getDatapacks(socket);
   });
 
   socket.on("get_whitelist", () => {

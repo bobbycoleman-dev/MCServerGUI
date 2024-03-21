@@ -8,7 +8,6 @@ export default function Dashboard() {
       <LogOutput />
       <CommandInput />
       <LoggedOnUsers />
-      <div><a href="https://mcseedmap.net/1.20.1-Java/2725214931529352700" target="_blank">Seed Map</a></div>
     </div>
   )
 }
