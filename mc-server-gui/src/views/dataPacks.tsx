@@ -1,9 +1,11 @@
+import useOS from "@/hooks/useOS";
 import { useSocket } from "@/providers/SocketContext";
 import { useEffect, useState } from "react";
 
 export default function DataPacks() {
   const [datapacks, setDatapacks] = useState<string[]>([]);
   const socket = useSocket();
+  const { userOS } = useOS();
 
   useEffect(() => {
     if (!socket) return;
@@ -26,6 +28,13 @@ export default function DataPacks() {
       {datapacks.map((pack, i) => (
         <p key={i}>{pack}</p>
       ))}
+      {
+        userOS === "MacOS" && (
+          <div>
+            <h2>Upload Datapack</h2>
+          </div>
+        )
+      }
     </div>
   );
 }
